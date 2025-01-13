@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import Joi from 'joi';
+import { createTask } from '../services/tasksService';
+import { Task } from '../entities/Task';
 
 const taskPostSchema = Joi.object({
   name: Joi.string().trim().not().empty().required(),
@@ -8,7 +10,7 @@ const taskPostSchema = Joi.object({
 
 export const tasksRouter = express.Router();
 
-tasksRouter.post('/', (req: Request, res: Response) => {
+tasksRouter.post('/', async (req: Request, res: Response) => {
     const body = req.body;
     const result = taskPostSchema.validate(body);
     if (result.error) {
@@ -16,5 +18,6 @@ tasksRouter.post('/', (req: Request, res: Response) => {
       return;
     }
 
-    res.send(body);
+    const newTask = await createTask(body as Task);
+    res.send(newTask);
   });

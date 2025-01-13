@@ -1,0 +1,13 @@
+import { AppDataSource } from '../data-source';
+import { Task } from '../entities/Task';
+
+export async function createTask(task: Task): Promise<Task> {
+  const newTask = new Task();
+
+  newTask.name = task.name;
+  newTask.description = task.description;
+
+  const result = await AppDataSource.manager.save(newTask);
+
+  return result;
+}
