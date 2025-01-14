@@ -15,3 +15,11 @@ export async function createTask(task: Task): Promise<Task> {
 export async function getAllTasks(): Promise<Task[]> {
   return await AppDataSource.manager.find(Task);
 }
+
+export async function stopTask(taskId: number): Promise<Task> {
+  const task: Task = await AppDataSource.manager.findOneByOrFail(Task, { id: taskId });
+
+  task.endTime = new Date();
+  
+  return await AppDataSource.manager.save(task);
+}
