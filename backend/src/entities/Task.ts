@@ -10,4 +10,10 @@ export class Task {
 
   @Column('text')
   description: string;
+
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  startTime: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  endTime: Date;
 }

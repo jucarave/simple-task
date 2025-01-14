@@ -11,3 +11,7 @@ export async function createTask(task: Task): Promise<Task> {
 
   return result;
 }
+
+export async function getAllTasks(): Promise<Task[]> {
+  return await AppDataSource.manager.find(Task);
+}
