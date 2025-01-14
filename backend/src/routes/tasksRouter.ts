@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { createTask, getAllTasks, stopTask } from '../services/tasksService';
+import { createTask, getAllTasks, stopTask, updateTask } from '../services/tasksService';
 import { Task } from '../entities/Task';
 import { AppError } from '../middlewares/errorHandlerMiddleware';
 
@@ -10,7 +10,13 @@ const taskPostSchema = Joi.object({
 });
 
 const taskStopSchema = Joi.object({
-  id: Joi.number()
+  id: Joi.number().required()
+});
+
+const taskUpdateSchema = Joi.object({
+  id: Joi.number().required(),
+  name: Joi.string().trim().not().empty().required(),
+  description: Joi.string().trim().not().empty().required()
 });
 
 export const tasksRouter = express.Router();
@@ -48,6 +54,22 @@ tasksRouter.patch('/:id/stop', async (req: Request, res: Response, next: NextFun
     }
 
     const task = await stopTask(taskId);
+    res.send(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+tasksRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const taskId = parseInt(req.params['id']);
+    const body = req.body;
+    const result = taskUpdateSchema.validate(body);
+    if (result.error) {
+      throw AppError.requestError(result.error.message);
+    }
+
+    const task = await updateTask(taskId, body);
     res.send(task);
   } catch (err) {
     next(err);
