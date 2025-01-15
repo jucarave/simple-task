@@ -1,0 +1,24 @@
+.TaskCard {
+  margin: 8px;
+  height: 200px;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 10px #ccc;
+  background-color: #ffffff;
+  color: #555555;
+}
+
+.TaskCard h3 {
+  margin: 0;
+  background-color: #001529;
+  color: #EEE;
+  padding: 8px;
+}
+
+.TaskCard .Content {
+  padding: 8px;
+  height: 100%;
+}
+
+.TaskCard .Content span {
+  flex: 1;
+}
