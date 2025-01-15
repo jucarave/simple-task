@@ -10,11 +10,11 @@ const taskPostSchema = Joi.object({
 });
 
 const taskIdOpperationSchema = Joi.object({
-  id: Joi.number().required()
+  id: Joi.string().required()
 });
 
 const taskUpdateSchema = Joi.object({
-  id: Joi.number().required(),
+  id: Joi.string().required(),
   name: Joi.string().trim().not().empty().required(),
   description: Joi.string().trim().not().empty().required()
 });
@@ -47,7 +47,7 @@ tasksRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
 
 tasksRouter.patch('/:id/stop', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const taskId = parseInt(req.params['id']);
+    const taskId = req.params['id'];
     const result = taskIdOpperationSchema.validate({ id: taskId });
     if (result.error) {
       throw AppError.requestError(result.error.message);
@@ -62,7 +62,7 @@ tasksRouter.patch('/:id/stop', async (req: Request, res: Response, next: NextFun
 
 tasksRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const taskId = parseInt(req.params['id']);
+    const taskId = req.params['id'];
     const body = req.body;
     const result = taskUpdateSchema.validate(body);
     if (result.error) {
@@ -78,7 +78,7 @@ tasksRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) 
 
 tasksRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const taskId = parseInt(req.params['id']);
+    const taskId = req.params['id'];
     const result = taskIdOpperationSchema.validate({ id: taskId });
     if (result.error) {
       throw AppError.requestError(result.error.message);

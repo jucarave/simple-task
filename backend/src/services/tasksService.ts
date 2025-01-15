@@ -20,7 +20,7 @@ export async function getAllTasks(): Promise<Task[]> {
   return await taskRepository.find();
 }
 
-export async function stopTask(taskId: number): Promise<Task> {
+export async function stopTask(taskId: string): Promise<Task> {
   let task: Task;
   try {
     task = await taskRepository.findOneByOrFail({ id: taskId });
@@ -33,7 +33,7 @@ export async function stopTask(taskId: number): Promise<Task> {
   return await taskRepository.save(task);
 }
 
-export async function updateTask(taskId: number, task: Task): Promise<Task> {
+export async function updateTask(taskId: string, task: Task): Promise<Task> {
   let dbTask: Task;
   try {
     dbTask = await taskRepository.findOneByOrFail({ id: taskId });
@@ -47,7 +47,7 @@ export async function updateTask(taskId: number, task: Task): Promise<Task> {
   return await taskRepository.save(dbTask);
 }
 
-export async function deleteTask(taskId: number): Promise<DeleteResult> {
+export async function deleteTask(taskId: string): Promise<DeleteResult> {
   try {
     await taskRepository.findOneByOrFail({ id: taskId });
   } catch (err) {
