@@ -1,3 +1,4 @@
+import { DeleteResult } from 'typeorm';
 import { AppDataSource } from '../data-source';
 import { Task } from '../entities/Task';
 import { AppError } from '../middlewares/errorHandlerMiddleware';
@@ -44,4 +45,14 @@ export async function updateTask(taskId: number, task: Task): Promise<Task> {
   dbTask.description = task.description;
 
   return await taskRepository.save(dbTask);
+}
+
+export async function deleteTask(taskId: number): Promise<DeleteResult> {
+  try {
+    await taskRepository.findOneByOrFail({ id: taskId });
+  } catch (err) {
+    throw AppError.resourceNotFound((<Error> err).message);
+  }
+
+  return await taskRepository.delete({id: taskId});
 }

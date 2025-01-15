@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { createTask, getAllTasks, stopTask, updateTask } from '../services/tasksService';
+import { createTask, deleteTask, getAllTasks, stopTask, updateTask } from '../services/tasksService';
 import { Task } from '../entities/Task';
 import { AppError } from '../middlewares/errorHandlerMiddleware';
 
@@ -9,7 +9,7 @@ const taskPostSchema = Joi.object({
   description: Joi.string().trim().not().empty().required()
 });
 
-const taskStopSchema = Joi.object({
+const taskIdOpperationSchema = Joi.object({
   id: Joi.number().required()
 });
 
@@ -48,7 +48,7 @@ tasksRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
 tasksRouter.patch('/:id/stop', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const taskId = parseInt(req.params['id']);
-    const result = taskStopSchema.validate({ id: taskId });
+    const result = taskIdOpperationSchema.validate({ id: taskId });
     if (result.error) {
       throw AppError.requestError(result.error.message);
     }
@@ -71,6 +71,21 @@ tasksRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) 
 
     const task = await updateTask(taskId, body);
     res.send(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+tasksRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const taskId = parseInt(req.params['id']);
+    const result = taskIdOpperationSchema.validate({ id: taskId });
+    if (result.error) {
+      throw AppError.requestError(result.error.message);
+    }
+
+    await deleteTask(taskId);
+    res.send({ id: taskId, deleted: true });
   } catch (err) {
     next(err);
   }
