@@ -5,10 +5,12 @@ dotenv.config({ path: __dirname + '/../.env'});
 import express, { Express } from 'express';
 import { tasksRouter } from './routes/tasksRouter';
 import { errorHandler } from './middlewares/errorHandlerMiddleware';
+import cors from 'cors';
 
 const app: Express = express();
 const port = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use('/tasks', tasksRouter);
 app.use(errorHandler);
